@@ -6,13 +6,18 @@ import java.util.Map;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rest.domain.post.post.entity.Post;
 import com.rest.domain.post.post.service.PostService;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -45,5 +50,25 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 		rsData.put("msg", "%d번 글 삭제가 완료되었습니다.".formatted(id));
 
 		return rsData;
+	}
+
+	@PutMapping("/{id}")
+	public Map<String, Object> modify(@PathVariable long id, @RequestBody ModifyForm form) {
+		// @ModelAttribute로 form을 만들어 받을 수 있다 -> 생략 가능
+		// 입력을 Json으로 받으면, Json을 객체화 하는 과정이 필요하다. -> @RequestBody (JSON으로 입력이 넘어올 때)
+		Post post = postService.getPost(id);
+		postService.modify(post, form.getTitle(), form.getContent());
+
+		Map<String, Object> rsData = new HashMap<>();
+		rsData.put("code", "200-1");
+		rsData.put("msg", "%d번 글 수정이 완료되었습니다.".formatted(id));
+		return rsData;
+	}
+
+	@AllArgsConstructor // 접근해서 데이터를 넣어주기 위함
+	@Getter // 값 변경에 사용하기 위해 값을 꺼내는 용도
+	private static class ModifyForm {
+		private String title;
+		private String content;
 	}
 }

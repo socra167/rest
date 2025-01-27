@@ -3,6 +3,7 @@ package com.rest.domain.post.post.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.rest.domain.post.post.entity.Post;
 import com.rest.domain.post.post.repository.PostRepository;
@@ -36,5 +37,11 @@ public class PostService {
 
 	public void delete(Post post) {
 		postRepository.delete(post);
+	}
+
+	@Transactional
+	public void modify(Post post, String title, String content) {
+		post.setTitle(title);
+		post.setContent(content);
 	}
 }

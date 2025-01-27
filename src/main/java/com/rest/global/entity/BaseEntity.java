@@ -1,4 +1,4 @@
-package com.rest.global;
+package com.rest.global.entity;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

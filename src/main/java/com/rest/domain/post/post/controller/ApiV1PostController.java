@@ -1,12 +1,9 @@
 package com.rest.domain.post.post.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.rest.domain.post.post.entity.Post;
 import com.rest.domain.post.post.service.PostService;
+import com.rest.global.dto.RsData;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -41,28 +39,27 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 	}
 
 	@DeleteMapping("/{id}")
-	public Map<String, Object> delete(@PathVariable long id) {
+	public RsData delete(@PathVariable long id) {
 		Post post = postService.getPost(id);
 		postService.delete(post);
 
-		Map<String, Object> rsData = new HashMap<>();
-		rsData.put("code", "200-1");
-		rsData.put("msg", "%d번 글 삭제가 완료되었습니다.".formatted(id));
-
-		return rsData;
+		return new RsData(
+			"200-1",
+			"%d번 글 삭제가 완료되었습니다.".formatted(id)
+		);
 	}
 
 	@PutMapping("/{id}")
-	public Map<String, Object> modify(@PathVariable long id, @RequestBody ModifyForm form) {
+	public RsData modify(@PathVariable long id, @RequestBody ModifyForm form) {
 		// @ModelAttribute로 form을 만들어 받을 수 있다 -> 생략 가능
 		// 입력을 Json으로 받으면, Json을 객체화 하는 과정이 필요하다. -> @RequestBody (JSON으로 입력이 넘어올 때)
 		Post post = postService.getPost(id);
 		postService.modify(post, form.getTitle(), form.getContent());
 
-		Map<String, Object> rsData = new HashMap<>();
-		rsData.put("code", "200-1");
-		rsData.put("msg", "%d번 글 수정이 완료되었습니다.".formatted(id));
-		return rsData;
+		return new RsData(
+			"200-1",
+			"%d번 글 수정이 완료되었습니다.".formatted(id)
+		); // return 타입이 객체면 JSON 형식으로 응답한다.
 	}
 
 	@AllArgsConstructor // 접근해서 데이터를 넣어주기 위함

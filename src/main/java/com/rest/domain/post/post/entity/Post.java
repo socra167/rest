@@ -2,7 +2,7 @@ package com.rest.domain.post.post.entity;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.rest.global.BaseTime;
+import com.rest.global.entity.BaseTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;

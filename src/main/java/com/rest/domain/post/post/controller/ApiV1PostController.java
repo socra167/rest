@@ -1,10 +1,10 @@
 package com.rest.domain.post.post.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.hibernate.validator.constraints.Length;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -99,7 +99,7 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 	}
 
 	@PostMapping // POST는 주로 저장에 사용한다
-	public RsData<WriteResBody> write(@RequestBody @Valid WriteReqBody body) {
+	public ResponseEntity<RsData<WriteResBody>> write(@RequestBody @Valid WriteReqBody body) {
 		Post post = postService.write(body.title(), body.content());
 
 		// Map<String, Object> dataMap = new HashMap<>();
@@ -110,14 +110,17 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 		// -> WriteResBody record를 만들어서 타입 안정성을 높임
 		// 클래스를 별도로 만들면, API 문서화하기에도 용이하다
 
-		return new RsData<>(
-			"200-1",
-			"글 작성이 완료되었습니다.",
-			new WriteResBody(
-				post.getId(),
-				postService.count()
-			)
-		);
+		return ResponseEntity
+			.status(HttpStatus.CREATED) // .status(201) 보단 가독성이 낫다
+			.body(
+				new RsData<>(
+					"200-1",
+					"글 작성이 완료되었습니다.",
+					new WriteResBody(
+						post.getId(),
+						postService.count()
+					)
+				));
 	}
 
 	/*

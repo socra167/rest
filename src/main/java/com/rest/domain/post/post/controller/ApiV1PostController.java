@@ -77,7 +77,8 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 	}
 
 	@PutMapping("/{id}")
-	public RsData<Void> modify(@PathVariable long id, @RequestBody @Valid ModifyReqBody body) { // NotBlank, Length 등 Validation을 사용할 때 @Valid를 붙여줘야 적용된다
+	public RsData<Void> modify(@PathVariable long id,
+		@RequestBody @Valid ModifyReqBody body) { // NotBlank, Length 등 Validation을 사용할 때 @Valid를 붙여줘야 적용된다
 		// @ModelAttribute로 form을 만들어 받을 수 있다 -> 생략 가능
 		// 입력을 Json으로 받으면, Json을 객체화 하는 과정이 필요하다. -> @RequestBody (JSON으로 입력이 넘어올 때)
 		// <Void> 타입에는 null 만 들어갈 수 있다
@@ -91,19 +92,31 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 		); // return 타입이 객체면 JSON 형식으로 응답한다.
 	}
 
+	record WriteReqBody(@NotBlank @Length(min = 3) String title, @NotBlank @Length(min = 3) String content) {
+	}
+
+	record WriteResBody(long id, long totalCount) {
+	}
+
 	@PostMapping // POST는 주로 저장에 사용한다
-	public RsData<Map> write(@RequestBody @Valid WriteReqBody body) {
+	public RsData<WriteResBody> write(@RequestBody @Valid WriteReqBody body) {
 		Post post = postService.write(body.title(), body.content());
 
-		Map<String, Object> dataMap = new HashMap<>();
-		dataMap.put("id", post.getId()); // Map을 사용하면 "id"의 이름이 틀릴수도 있다
-		dataMap.put("totalCount", postService.count());
+		// Map<String, Object> dataMap = new HashMap<>();
+		// dataMap.put("id", post.getId()); // Map을 사용하면 "id"의 이름이 틀릴수도 있다
+		// dataMap.put("totalCount", postService.count());
 		// Map이 Object를 담기 때문에, 모든 데이터 타입이 들어갈 수 있다
+
+		// -> WriteResBody record를 만들어서 타입 안정성을 높임
+		// 클래스를 별도로 만들면, API 문서화하기에도 용이하다
 
 		return new RsData<>(
 			"200-1",
 			"글 작성이 완료되었습니다.",
-			dataMap
+			new WriteResBody(
+				post.getId(),
+				postService.count()
+			)
 		);
 	}
 
@@ -116,12 +129,9 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 		private String content;
 	}
 	*/
-
 	// 생성자, getter, setter, equals() 기본으로 존재한다
 	record ModifyReqBody(@NotBlank @Length(min = 3) String title, @NotBlank @Length(min = 3) String content) {
-	}
 
-	record WriteReqBody(@NotBlank @Length(min = 3) String title, @NotBlank @Length(min = 3) String content) {
 	}
 
 }

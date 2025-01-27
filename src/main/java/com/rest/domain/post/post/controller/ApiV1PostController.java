@@ -1,6 +1,8 @@
 package com.rest.domain.post.post.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.validator.constraints.Length;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -90,13 +92,18 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 	}
 
 	@PostMapping // POST는 주로 저장에 사용한다
-	public RsData<Long> write(@RequestBody @Valid WriteReqBody body) {
+	public RsData<Map> write(@RequestBody @Valid WriteReqBody body) {
 		Post post = postService.write(body.title(), body.content());
+
+		Map<String, Object> dataMap = new HashMap<>();
+		dataMap.put("id", post.getId()); // Map을 사용하면 "id"의 이름이 틀릴수도 있다
+		dataMap.put("totalCount", postService.count());
+		// Map이 Object를 담기 때문에, 모든 데이터 타입이 들어갈 수 있다
 
 		return new RsData<>(
 			"200-1",
 			"글 작성이 완료되었습니다.",
-			post.getId()
+			dataMap
 		);
 	}
 

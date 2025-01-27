@@ -2,6 +2,7 @@ package com.rest.domain.post.post.controller;
 
 import java.util.List;
 
+import org.hibernate.validator.constraints.Length;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,8 +16,8 @@ import com.rest.domain.post.post.entity.Post;
 import com.rest.domain.post.post.service.PostService;
 import com.rest.global.dto.RsData;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -56,7 +57,7 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 	}
 
 	@PutMapping("/{id}")
-	public RsData modify(@PathVariable long id, @RequestBody ModifyReqBody body) {
+	public RsData modify(@PathVariable long id, @RequestBody @Valid ModifyReqBody body) { // NotBlank, Length 등 Validation을 사용할 때 @Valid를 붙여줘야 적용된다
 		// @ModelAttribute로 form을 만들어 받을 수 있다 -> 생략 가능
 		// 입력을 Json으로 받으면, Json을 객체화 하는 과정이 필요하다. -> @RequestBody (JSON으로 입력이 넘어올 때)
 		Post post = postService.getPost(id);
@@ -69,7 +70,7 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 	}
 
 	@PostMapping // POST는 주로 저장에 사용한다
-	public RsData write(@RequestBody WriteReqBody body) {
+	public RsData write(@RequestBody @Valid WriteReqBody body) {
 		postService.write(body.title(), body.content());
 
 		return new RsData("200-1",
@@ -88,8 +89,10 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 	*/
 
 	// 생성자, getter, setter, equals() 기본으로 존재한다
-	record ModifyReqBody(String title, String content) { }
+	record ModifyReqBody(@NotBlank @Length(min = 3) String title, @NotBlank @Length(min = 3) String content) {
+	}
 
-	record WriteReqBody(String title, String content) { }
+	record WriteReqBody(@NotBlank @Length(min = 3) String title, @NotBlank @Length(min = 3) String content) {
+	}
 
 }

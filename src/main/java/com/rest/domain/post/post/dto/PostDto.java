@@ -2,8 +2,6 @@ package com.rest.domain.post.post.dto;
 
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rest.domain.post.post.entity.Post;
 
 import lombok.Getter;

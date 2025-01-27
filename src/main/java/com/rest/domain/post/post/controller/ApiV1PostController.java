@@ -63,37 +63,40 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 	}
 
 	@DeleteMapping("/{id}")
-	public RsData delete(@PathVariable long id) {
+	public RsData<Void> delete(@PathVariable long id) {
 		Post post = postService.getPost(id);
 		postService.delete(post);
 
-		return new RsData(
+		return new RsData<>(
 			"200-1",
-			"%d번 글 삭제가 완료되었습니다.".formatted(id)
+			"%d번 글 삭제가 완료되었습니다.".formatted(id),
+			null
 		);
 	}
 
 	@PutMapping("/{id}")
-	public RsData modify(@PathVariable long id, @RequestBody @Valid ModifyReqBody body) { // NotBlank, Length 등 Validation을 사용할 때 @Valid를 붙여줘야 적용된다
+	public RsData<Void> modify(@PathVariable long id, @RequestBody @Valid ModifyReqBody body) { // NotBlank, Length 등 Validation을 사용할 때 @Valid를 붙여줘야 적용된다
 		// @ModelAttribute로 form을 만들어 받을 수 있다 -> 생략 가능
 		// 입력을 Json으로 받으면, Json을 객체화 하는 과정이 필요하다. -> @RequestBody (JSON으로 입력이 넘어올 때)
+		// <Void> 타입에는 null 만 들어갈 수 있다
 		Post post = postService.getPost(id);
 		postService.modify(post, body.title(), body.content()); // record에서 getter는 get을 빼고 필드 이름을 사용하면 된다
 
-		return new RsData(
+		return new RsData<>(
 			"200-1",
-			"%d번 글 수정이 완료되었습니다.".formatted(id)
+			"%d번 글 수정이 완료되었습니다.".formatted(id),
+			null
 		); // return 타입이 객체면 JSON 형식으로 응답한다.
 	}
 
 	@PostMapping // POST는 주로 저장에 사용한다
-	public RsData write(@RequestBody @Valid WriteReqBody body) {
+	public RsData<Long> write(@RequestBody @Valid WriteReqBody body) {
 		Post post = postService.write(body.title(), body.content());
 
 		return new RsData<>(
 			"200-1",
-			"글 작성이 완료되었습니다."
-			, post.getId()
+			"글 작성이 완료되었습니다.",
+			post.getId()
 		);
 	}
 

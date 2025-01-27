@@ -39,6 +39,11 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 		// v1, v2, ...	: 기존 API를 사용하고 있는 사람들을 고려해서, 이전 버전을 남겨놓아야 한다
 	}
 
+	@GetMapping("/{id}")
+	public Post getItem(@PathVariable long id) {
+		return postService.getPost(id);
+	}
+
 	@DeleteMapping("/{id}")
 	public RsData delete(@PathVariable long id) {
 		Post post = postService.getPost(id);

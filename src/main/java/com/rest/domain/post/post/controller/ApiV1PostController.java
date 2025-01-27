@@ -28,13 +28,13 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 	private final PostService postService;
 
 	@GetMapping
-	public RsData getItems() {
+	public RsData<List<PostDto>> getItems() {
 		List<Post> posts = postService.getPosts();
 		List<PostDto> postDtos = posts.stream()
 			.map(PostDto::new)
 			.toList();
 
-		return new RsData(
+		return new RsData<>(
 			"200-1",
 			"글 목록 조회가 완료되었습니다",
 			postDtos
@@ -52,10 +52,10 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 	}
 
 	@GetMapping("/{id}")
-	public RsData getItem(@PathVariable long id) {
+	public RsData<PostDto> getItem(@PathVariable long id) {
 		Post post = postService.getPost(id);
 		// return new PostDto(post);
-		return new RsData(
+		return new RsData<>(
 			"200-1",
 			"글 조회가 완료되었습니다.",
 			new PostDto(post) // Json에서는 객체 안에 객체가 있으면 중괄호로 한번 더 묶인다
@@ -90,9 +90,10 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 	public RsData write(@RequestBody @Valid WriteReqBody body) {
 		Post post = postService.write(body.title(), body.content());
 
-		return new RsData("200-1",
+		return new RsData<>(
+			"200-1",
 			"글 작성이 완료되었습니다."
-			,post.getId()
+			, post.getId()
 		);
 	}
 

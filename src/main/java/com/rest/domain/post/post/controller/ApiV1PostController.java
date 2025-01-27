@@ -56,11 +56,11 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 	}
 
 	@PutMapping("/{id}")
-	public RsData modify(@PathVariable long id, @RequestBody ModifyForm form) {
+	public RsData modify(@PathVariable long id, @RequestBody ModifyReqBody body) {
 		// @ModelAttribute로 form을 만들어 받을 수 있다 -> 생략 가능
 		// 입력을 Json으로 받으면, Json을 객체화 하는 과정이 필요하다. -> @RequestBody (JSON으로 입력이 넘어올 때)
 		Post post = postService.getPost(id);
-		postService.modify(post, form.getTitle(), form.getContent());
+		postService.modify(post, body.getTitle(), body.getContent());
 
 		return new RsData(
 			"200-1",
@@ -69,8 +69,8 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 	}
 
 	@PostMapping // POST는 주로 저장에 사용한다
-	public RsData write(@RequestBody WriteForm form) {
-		postService.write(form.getTitle(), form.getContent());
+	public RsData write(@RequestBody WriteReqBody body) {
+		postService.write(body.getTitle(), body.getContent());
 
 		return new RsData("200-1",
 			"글 작성이 완료되었습니다."
@@ -79,14 +79,14 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 
 	@AllArgsConstructor // 접근해서 데이터를 넣어주기 위함
 	@Getter // 값 변경에 사용하기 위해 값을 꺼내는 용도
-	private static class ModifyForm {
+	private static class ModifyReqBody {
 		private String title;
 		private String content;
 	}
 
 	@AllArgsConstructor
 	@Getter
-	private static class WriteForm {
+	private static class WriteReqBody {
 		private String title;
 		private String content;
 	}

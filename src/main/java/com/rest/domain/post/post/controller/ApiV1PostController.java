@@ -28,8 +28,12 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 	private final PostService postService;
 
 	@GetMapping
-	public List<Post> getItems() {
-		return postService.getPosts();
+	public List<PostDto> getItems() {
+		List<Post> posts = postService.getPosts();
+		return posts.stream()
+			.map(PostDto::new)
+			.toList();
+
 		// [ API ]
 		// GET posts	: 모든 글 조회
 		// GET posts/1	: 1번 글 조회

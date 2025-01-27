@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rest.domain.post.post.dto.PostDto;
 import com.rest.domain.post.post.entity.Post;
 import com.rest.domain.post.post.service.PostService;
 import com.rest.global.dto.RsData;
@@ -41,8 +42,9 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 	}
 
 	@GetMapping("/{id}")
-	public Post getItem(@PathVariable long id) {
-		return postService.getPost(id);
+	public PostDto getItem(@PathVariable long id) {
+		Post post = postService.getPost(id);
+		return new PostDto(post);
 	}
 
 	@DeleteMapping("/{id}")

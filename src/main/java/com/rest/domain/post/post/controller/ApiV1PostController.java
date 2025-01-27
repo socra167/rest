@@ -28,11 +28,17 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 	private final PostService postService;
 
 	@GetMapping
-	public List<PostDto> getItems() {
+	public RsData getItems() {
 		List<Post> posts = postService.getPosts();
-		return posts.stream()
+		List<PostDto> postDtos = posts.stream()
 			.map(PostDto::new)
 			.toList();
+
+		return new RsData(
+			"200-1",
+			"글 목록 조회가 완료되었습니다",
+			postDtos
+		);
 
 		// [ API ]
 		// GET posts	: 모든 글 조회
@@ -46,9 +52,14 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 	}
 
 	@GetMapping("/{id}")
-	public PostDto getItem(@PathVariable long id) {
+	public RsData getItem(@PathVariable long id) {
 		Post post = postService.getPost(id);
-		return new PostDto(post);
+		// return new PostDto(post);
+		return new RsData(
+			"200-1",
+			"글 조회가 완료되었습니다.",
+			new PostDto(post) // Json에서는 객체 안에 객체가 있으면 중괄호로 한번 더 묶인다
+		);
 	}
 
 	@DeleteMapping("/{id}")

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,9 +63,25 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 		); // return 타입이 객체면 JSON 형식으로 응답한다.
 	}
 
+	@PostMapping // POST는 주로 저장에 사용한다
+	public RsData write(@RequestBody WriteForm form) {
+		postService.write(form.getTitle(), form.getContent());
+
+		return new RsData("200-1",
+			"글 작성이 완료되었습니다."
+		);
+	}
+
 	@AllArgsConstructor // 접근해서 데이터를 넣어주기 위함
 	@Getter // 값 변경에 사용하기 위해 값을 꺼내는 용도
 	private static class ModifyForm {
+		private String title;
+		private String content;
+	}
+
+	@AllArgsConstructor
+	@Getter
+	private static class WriteForm {
 		private String title;
 		private String content;
 	}

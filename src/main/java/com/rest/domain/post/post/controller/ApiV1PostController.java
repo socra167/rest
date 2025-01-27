@@ -77,7 +77,7 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity modify(@PathVariable long id,
+	public RsData<Void> modify(@PathVariable long id,
 		@RequestBody @Valid ModifyReqBody body) { // NotBlank, Length 등 Validation을 사용할 때 @Valid를 붙여줘야 적용된다
 		// @ModelAttribute로 form을 만들어 받을 수 있다 -> 생략 가능
 		// 입력을 Json으로 받으면, Json을 객체화 하는 과정이 필요하다. -> @RequestBody (JSON으로 입력이 넘어올 때)
@@ -85,15 +85,12 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 		Post post = postService.getPost(id);
 		postService.modify(post, body.title(), body.content()); // record에서 getter는 get을 빼고 필드 이름을 사용하면 된다
 
-		return ResponseEntity
-			.noContent()
-			.build();
-
-		// return new RsData<>(
-		// 	"200-1",
-		// 	"%d번 글 수정이 완료되었습니다.".formatted(id),
-		// 	null
-		// ); // return 타입이 객체면 JSON 형식으로 응답한다.
+		// ResponseEntity를 사용하지 않으면 기본적으로 200으로 응답한다
+		return new RsData<>(
+			"200-1",
+			"%d번 글 수정이 완료되었습니다.".formatted(id),
+			null
+		); // return 타입이 객체면 JSON 형식으로 응답한다.
 	}
 
 	record WriteReqBody(@NotBlank @Length(min = 3) String title, @NotBlank @Length(min = 3) String content) {

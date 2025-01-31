@@ -1,11 +1,10 @@
 package com.rest.global.exception;
 
-import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -33,15 +32,19 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<RsData<Void>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
 
-		String field = e.getBindingResult().getFieldError().getField();
-		String message = e.getBindingResult().getFieldError().getDefaultMessage();
+		String message = e.getBindingResult().getFieldErrors() // 예외를 통해서도 bindingResult를 사용할 수 있다
+			.stream()
+			.map(fieldError -> fieldError.getField() + " : " + fieldError.getCode() + " : "
+				+ fieldError.getDefaultMessage()) // code는 NotBlank, Length 등 어떤 Validation이 잘못되었는지
+			.sorted()
+			.collect(Collectors.joining("\n"));
 
 		return ResponseEntity
 			.status(HttpStatus.BAD_REQUEST)
 			.body(
 				new RsData<>(
 					"400-1",
-					field + " : " + message
+					message
 				)
 			);
 	}

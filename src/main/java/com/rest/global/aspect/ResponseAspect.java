@@ -38,7 +38,7 @@ public class ResponseAspect {
 		||
 		@annotation(org.springframework.web.bind.annotation.ResponseBody)
 		""")
-	public Object test(ProceedingJoinPoint joinPoint) throws Throwable {
+	public Object responseAspect(ProceedingJoinPoint joinPoint) throws Throwable {
 		// System.out.println("pre"); // 전처리
 
 		Object rst = joinPoint.proceed(); // 실제 수행 메서드

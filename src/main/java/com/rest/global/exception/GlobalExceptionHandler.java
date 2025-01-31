@@ -72,5 +72,8 @@ public class GlobalExceptionHandler {
 					"이미 존재하는 아이디입니다."
 				)
 			);
+		// DataIntegrityViolationException은 DB에서 PK가 중복되면 발생하는 예외로, ID 중복에서만 발생한다고 보장할 수 없다.
+		// ID의 중복이 아닌 다른 원인으로 예외가 발생했을 때에도 DataIntegrityViolationException 예외가 발생하면 예외를 전역처리 했으므로 잘못된 메시지가 응답된다.
+		// 아니면 "이미 존재하는 데이터입니다"같이 추상적으로 표현하게 된다.
 	}
 }

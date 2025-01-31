@@ -55,6 +55,14 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 	@GetMapping("/{id}")
 	public RsData<PostDto> getItem(@PathVariable long id) {
 		Post post = null;
+		post = postService.getPost(id).get();
+
+		/*
+		// try-catch는 가독성이 떨어지고, 에러가 발생하면 catch로 점프하기 때문에 논리적 순서를 이해하기 어렵다
+
+		// try-catch를 사용해야 한다면 여기저기 사용하기보다 모아뒀다가 한 곳에서 한번에 처리하는게 좋다
+		// try~catch로 끝 단에서 처리하고, 깔끔하게 처리된 것들을 코어에서 clean한 데이터로 관리하는 게 낫다
+		// 어느 레이어에서나 예외는 발생할 수 있기 때문에, 예외 처리기를 따로 만들어서 처리하는 게 좋다
 		try {
 			post = postService.getPost(id).get();
 		} catch(NoSuchElementException e) {
@@ -64,6 +72,8 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 				null
 			);
 		}
+		 */
+
 		// return new PostDto(post);
 		return new RsData<>(
 			"200-1",

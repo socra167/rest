@@ -1,10 +1,9 @@
 package com.rest.domain.post.post.controller;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.hibernate.validator.constraints.Length;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,7 +54,16 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 
 	@GetMapping("/{id}")
 	public RsData<PostDto> getItem(@PathVariable long id) {
-		Post post = postService.getPost(id);
+		Post post = null;
+		try {
+			post = postService.getPost(id).get();
+		} catch(NoSuchElementException e) {
+			return new RsData<>(
+				"404-1",
+				"%d번 글이 존재하지 않습니다.".formatted(id),
+				null
+			);
+		}
 		// return new PostDto(post);
 		return new RsData<>(
 			"200-1",
@@ -66,7 +74,7 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 
 	@DeleteMapping("/{id}")
 	public RsData<Void> delete(@PathVariable long id) {
-		Post post = postService.getPost(id);
+		Post post = postService.getPost(id).get();
 		postService.delete(post);
 
 		// ResponseEntity.noContent().build(); // 원래대로라면 이렇게 반환해야 204 코드가 나온다
@@ -84,7 +92,7 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 		// @ModelAttribute로 form을 만들어 받을 수 있다 -> 생략 가능
 		// 입력을 Json으로 받으면, Json을 객체화 하는 과정이 필요하다. -> @RequestBody (JSON으로 입력이 넘어올 때)
 		// <Void> 타입에는 null 만 들어갈 수 있다
-		Post post = postService.getPost(id);
+		Post post = postService.getPost(id).get();
 		postService.modify(post, body.title(), body.content()); // record에서 getter는 get을 빼고 필드 이름을 사용하면 된다
 
 		// ResponseEntity를 사용하지 않으면 기본적으로 200으로 응답한다

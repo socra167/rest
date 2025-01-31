@@ -1,6 +1,7 @@
 package com.rest.domain.post.post.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,8 +28,8 @@ public class PostService {
 		return postRepository.findAll();
 	}
 
-	public Post getPost(long id) {
-		return postRepository.findById(id).get();
+	public Optional<Post> getPost(long id) {
+		return postRepository.findById(id);
 	}
 
 	public long count() {

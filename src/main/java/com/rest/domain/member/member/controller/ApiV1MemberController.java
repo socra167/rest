@@ -26,13 +26,13 @@ public class ApiV1MemberController {
 					   @NotBlank @Length(min = 3) String nickname) {
 	}
 
-	@PostMapping
+	@PostMapping("/join")
 	public RsData<MemberDto> write(@RequestBody @Valid JoinReqBody body) {
 		Member member = memberService.join(body.username(), body.password(), body.nickname());
 
 		return new RsData<>(
-			"200-1",
-			"회원가입이 완료되었습니다.",
+			"201-1",
+			"회원 가입이 완료되었습니다.",
 			new MemberDto(member)
 		);
 	}

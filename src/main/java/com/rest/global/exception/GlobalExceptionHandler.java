@@ -3,6 +3,7 @@ package com.rest.global.exception;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -53,6 +54,22 @@ public class GlobalExceptionHandler {
 				new RsData<>(
 					"400-1",
 					message
+				)
+			);
+	}
+
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public ResponseEntity<RsData<Void>> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
+		if (AppConfig.isNotProd()) {
+			e.printStackTrace();
+		}
+
+		return ResponseEntity
+			.status(HttpStatus.CONFLICT)
+			.body(
+				new RsData<>(
+					"409-1",
+					"이미 존재하는 아이디입니다."
 				)
 			);
 	}

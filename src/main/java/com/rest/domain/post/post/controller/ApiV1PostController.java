@@ -69,8 +69,10 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 		Post post = postService.getPost(id);
 		postService.delete(post);
 
+		// ResponseEntity.noContent().build(); // 원래대로라면 이렇게 반환해야 204 코드가 나온다
+
 		return new RsData<>(
-			"200-1",
+			"204-1",
 			"%d번 글 삭제가 완료되었습니다.".formatted(id),
 			null
 		);

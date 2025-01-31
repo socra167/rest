@@ -12,25 +12,25 @@ import com.rest.global.dto.RsData;
 public class ResponseAspect {
 
 	@Around("""
-            (
-                within
-                (
-                    @org.springframework.web.bind.annotation.RestController *
-                )
-                &&
-                (
-                    @annotation(org.springframework.web.bind.annotation.GetMapping)
-                    ||
-                    @annotation(org.springframework.web.bind.annotation.PostMapping)
-                    ||
-                    @annotation(org.springframework.web.bind.annotation.PutMapping)
-                    ||
-                    @annotation(org.springframework.web.bind.annotation.DeleteMapping)
-                )
-            )
-            ||
-            @annotation(org.springframework.web.bind.annotation.ResponseBody)
-            """)
+		(
+		    within
+		    (
+		        @org.springframework.web.bind.annotation.RestController *
+		    )
+		    &&
+		    (
+		        @annotation(org.springframework.web.bind.annotation.GetMapping)
+		        ||
+		        @annotation(org.springframework.web.bind.annotation.PostMapping)
+		        ||
+		        @annotation(org.springframework.web.bind.annotation.PutMapping)
+		        ||
+		        @annotation(org.springframework.web.bind.annotation.DeleteMapping)
+		    )
+		)
+		||
+		@annotation(org.springframework.web.bind.annotation.ResponseBody)
+		""")
 	public Object test(ProceedingJoinPoint joinPoint) throws Throwable {
 		System.out.println("pre"); // 전처리
 

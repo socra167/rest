@@ -11,12 +11,18 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.rest.global.dto.RsData;
 
+import lombok.extern.slf4j.Slf4j;
+
 // @ControllerAdvice
+@Slf4j
 @RestControllerAdvice // Controller에서 발생하는 예외가 이곳으로 전달된다 (예외가 발생하면 GlobalExceptionHandler가 가로챈다)
 public class GlobalExceptionHandler {
 
 	@ExceptionHandler(NoSuchElementException.class) // NoSuchElementException 예외가 발생하면 이 메서드를 실행한다
-	public ResponseEntity<RsData<Void>> handle() {
+	public ResponseEntity<RsData<Void>> handle(NoSuchElementException e) {
+		// 예외를 처리하면 응답 자체는 잘 처리되지만, 콘솔 로그에서 예외가 발생했다는 사실을 확인할 수 없다
+		e.printStackTrace(); // exception의 StackTrace를 출력시면 예외 Trace를 확인할 수 있다
+
 		return ResponseEntity
 			.status(HttpStatus.NOT_FOUND)
 			.body(new RsData<>(
@@ -31,6 +37,7 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<RsData<Void>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+		e.printStackTrace();
 
 		String message = e.getBindingResult().getFieldErrors() // 예외를 통해서도 bindingResult를 사용할 수 있다
 			.stream()

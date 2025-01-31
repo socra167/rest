@@ -10,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.rest.domain.member.member.dto.MemberDto;
 import com.rest.global.app.AppConfig;
 import com.rest.global.dto.RsData;
 
@@ -58,19 +59,19 @@ public class GlobalExceptionHandler {
 			);
 	}
 
-	@ExceptionHandler(RuntimeException.class)
-	public ResponseEntity<RsData<Void>> handleRuntimeException(RuntimeException e) {
+	@ExceptionHandler(ServiceException.class)
+	public ResponseEntity<RsData<MemberDto>> handleServiceException(ServiceException e) {
 		// RuntimeException 자체에도 적용할 수는 있다. 하지만 RuntimeException은 범위가 너무 광범위해 실제로 이렇게 사용하진 않는다.
 		if (AppConfig.isNotProd()) {
 			e.printStackTrace();
 		}
 
 		return ResponseEntity
-			.status(HttpStatus.CONFLICT)
+			.status(e.getStatusCode())
 			.body(
 				new RsData<>(
-					"409-1",
-					e.getMessage()
+					e.getCode(),
+					e.getMsg()
 				)
 			);
 		// DataIntegrityViolationException은 DB에서 PK가 중복되면 발생하는 예외로, ID 중복에서만 발생한다고 보장할 수 없다.

@@ -62,6 +62,9 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(ServiceException.class)
 	public ResponseEntity<RsData<MemberDto>> handleServiceException(ServiceException e) {
 		// RuntimeException 자체에도 적용할 수는 있다. 하지만 RuntimeException은 범위가 너무 광범위해 실제로 이렇게 사용하진 않는다.
+		// ServiceException Custom Exception을 만들어 처리했다.
+		// 구체적인 처리가 필요한 경우 MemberJoinDuplicatedException처럼 구체적인 예외를 하나하나 만들어서 처리할 수도 있다.
+		// 하지만 예외가 너무 많아지면 관리가 어려워질수도 있으므로 적절히 선택하자.
 		if (AppConfig.isNotProd()) {
 			e.printStackTrace();
 		}

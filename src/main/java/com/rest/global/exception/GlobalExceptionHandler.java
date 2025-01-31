@@ -58,8 +58,9 @@ public class GlobalExceptionHandler {
 			);
 	}
 
-	@ExceptionHandler(IllegalArgumentException.class)
-	public ResponseEntity<RsData<Void>> handleIllegalArgumentException(IllegalArgumentException e) {
+	@ExceptionHandler(RuntimeException.class)
+	public ResponseEntity<RsData<Void>> handleRuntimeException(RuntimeException e) {
+		// RuntimeException 자체에도 적용할 수는 있다. 하지만 RuntimeException은 범위가 너무 광범위해 실제로 이렇게 사용하진 않는다.
 		if (AppConfig.isNotProd()) {
 			e.printStackTrace();
 		}

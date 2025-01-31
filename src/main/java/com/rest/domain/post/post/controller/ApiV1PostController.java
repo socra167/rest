@@ -73,6 +73,7 @@ public class ApiV1PostController { // PostController인데 API용으로 쓸 거�
 			);
 		}
 		 */
+		// => @ControllerAdvice, @RestControllerAdvice + @ExceptionHandler
 
 		// return new PostDto(post);
 		return new RsData<>(

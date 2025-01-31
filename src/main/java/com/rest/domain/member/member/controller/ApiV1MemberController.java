@@ -28,6 +28,11 @@ public class ApiV1MemberController {
 
 	@PostMapping("/join")
 	public RsData<MemberDto> write(@RequestBody @Valid JoinReqBody body) {
+		memberService.findByUsername(body.username())
+			.ifPresent(member -> {
+				throw new IllegalArgumentException("이미 사용중인 아이디입니다.");
+			});
+
 		Member member = memberService.join(body.username(), body.password(), body.nickname());
 
 		return new RsData<>(

@@ -58,8 +58,8 @@ public class GlobalExceptionHandler {
 			);
 	}
 
-	@ExceptionHandler(DataIntegrityViolationException.class)
-	public ResponseEntity<RsData<Void>> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ResponseEntity<RsData<Void>> handleIllegalArgumentException(IllegalArgumentException e) {
 		if (AppConfig.isNotProd()) {
 			e.printStackTrace();
 		}
@@ -69,11 +69,13 @@ public class GlobalExceptionHandler {
 			.body(
 				new RsData<>(
 					"409-1",
-					"이미 존재하는 아이디입니다."
+					e.getMessage()
 				)
 			);
 		// DataIntegrityViolationException은 DB에서 PK가 중복되면 발생하는 예외로, ID 중복에서만 발생한다고 보장할 수 없다.
 		// ID의 중복이 아닌 다른 원인으로 예외가 발생했을 때에도 DataIntegrityViolationException 예외가 발생하면 예외를 전역처리 했으므로 잘못된 메시지가 응답된다.
 		// 아니면 "이미 존재하는 데이터입니다"같이 추상적으로 표현하게 된다.
+		// -> 	회원 가입 시 이미 동일한 username이 존재하는지 확인하고, 존재한다면 IllegalArgumentException을 발생시킨다.
+		// 		IllegalArgumentException 예외를 전역 처리해 메시지를 응답한다.
 	}
 }

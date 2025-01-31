@@ -12,10 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.rest.global.app.AppConfig;
 import com.rest.global.dto.RsData;
 
-import lombok.extern.slf4j.Slf4j;
-
 // @ControllerAdvice
-@Slf4j
 @RestControllerAdvice // Controller에서 발생하는 예외가 이곳으로 전달된다 (예외가 발생하면 GlobalExceptionHandler가 가로챈다)
 public class GlobalExceptionHandler {
 
